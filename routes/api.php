@@ -26,7 +26,7 @@ use App\Http\Controllers\ReportController;
 // -------------------------------------------------------
 // RUTAS PÚBLICAS
 // -------------------------------------------------------
-Route::post('/login', [LoginController::class, 'login']);
+Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::post('/register', [RegisterController::class, 'register']);
 
 // -------------------------------------------------------
