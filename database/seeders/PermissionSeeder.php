@@ -7,53 +7,43 @@ use App\Models\Permission;
 
 class PermissionSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
         $permissions = [
+            // Branches (Sucursales)
+            ['name' => 'Ver sucursales', 'key' => 'branches.view', 'module' => 'branches'],
+            ['name' => 'Gestionar sucursales', 'key' => 'branches.manage', 'module' => 'branches'],
 
-            // USERS
-            ['name' => 'users.manage', 'description' => 'Gestionar usuarios'],
-            ['name' => 'users.create', 'description' => 'Crear usuarios'],
-            ['name' => 'users.update', 'description' => 'Actualizar usuarios'],
-            ['name' => 'users.delete', 'description' => 'Eliminar usuarios'],
+            // Clients (Clientes)
+            ['name' => 'Ver clientes', 'key' => 'clients.view', 'module' => 'clients'],
+            ['name' => 'Gestionar clientes', 'key' => 'clients.manage', 'module' => 'clients'],
 
-            // ROLES
-            ['name' => 'roles.manage', 'description' => 'Gestionar roles'],
-            ['name' => 'roles.create', 'description' => 'Crear roles'],
-            ['name' => 'roles.update', 'description' => 'Actualizar roles'],
-            ['name' => 'roles.delete', 'description' => 'Eliminar roles'],
+            // Projects (Proyectos)
+            ['name' => 'Ver proyectos', 'key' => 'projects.view', 'module' => 'projects'],
+            ['name' => 'Gestionar proyectos', 'key' => 'projects.manage', 'module' => 'projects'],
 
-            // PERMISSIONS
-            ['name' => 'permissions.manage', 'description' => 'Gestionar permisos'],
+            // Production tasks (Producción)
+            ['name' => 'Ver tareas de producción', 'key' => 'production.view', 'module' => 'production'],
+            ['name' => 'Gestionar tareas de producción', 'key' => 'production.manage', 'module' => 'production'],
 
-            // AUDIT
-            ['name' => 'audit.view', 'description' => 'Ver registro de auditoría'],
+            // Files upload (Archivos de proyecto)
+            ['name' => 'Subir archivos de proyecto', 'key' => 'files.upload', 'module' => 'files'],
 
-            // BRANCHES
-            ['name' => 'branches.view', 'description' => 'Ver sucursales'],
-            ['name' => 'branches.manage', 'description' => 'Gestionar sucursales'],
+            // Reports (Reportes)
+            ['name' => 'Ver reportes', 'key' => 'reports.view', 'module' => 'reports'],
 
-            // CLIENTS
-            ['name' => 'clients.view', 'description' => 'Ver clientes'],
-            ['name' => 'clients.manage', 'description' => 'Gestionar clientes'],
-
-            // PROJECTS
-            ['name' => 'projects.view', 'description' => 'Ver proyectos'],
-            ['name' => 'projects.manage', 'description' => 'Gestionar proyectos'],
-
-            // PRODUCTION
-            ['name' => 'production.view', 'description' => 'Ver producción'],
-            ['name' => 'production.manage', 'description' => 'Gestionar producción'],
-
-            // FILES
-            ['name' => 'files.upload', 'description' => 'Subir archivos'],
-
-            // REPORTS
-            ['name' => 'reports.view', 'description' => 'Ver reportes'],
+            // Roles & Permissions management
+            ['name' => 'Gestionar roles y permisos', 'key' => 'roles.manage', 'module' => 'roles'],
         ];
 
         foreach ($permissions as $perm) {
-            Permission::updateOrCreate(['name' => $perm['name']], $perm);
+            Permission::updateOrCreate(
+                ['key' => $perm['key']],
+                ['name' => $perm['name'], 'module' => $perm['module']]
+            );
         }
     }
 }

@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         // Ejecutar seeders principales
         $this->call([
-            RolePermissionSeeder::class,
+            PermissionSeeder::class,
             SuperAdminSeeder::class,
         ]);
     }
