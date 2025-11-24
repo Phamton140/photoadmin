@@ -177,6 +177,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/clothes', [ClothController::class, 'store']);
         Route::get('/clothes/{id}', [ClothController::class, 'show']);
         Route::put('/clothes/{id}', [ClothController::class, 'update']);
+        Route::post('/clothes/{id}', [ClothController::class, 'update']); // Allow POST for updates with files
         Route::delete('/clothes/{id}', [ClothController::class, 'destroy']);
     });
 
