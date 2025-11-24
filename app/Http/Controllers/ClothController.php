@@ -26,7 +26,7 @@ class ClothController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'image'          => 'nullable|image|max:2048',
+            'image'          => 'nullable|image|max:10240', // max 10MB for high quality
             'name'           => 'required|string|max:255',
             'category_id'    => 'required|exists:categories,id',
             'subcategory_id' => 'nullable|exists:categories,id',
@@ -61,7 +61,7 @@ class ClothController extends Controller
     {
         $cloth = Cloth::findOrFail($id);
         $validated = $request->validate([
-            'image'          => 'nullable|image|max:2048',
+            'image'          => 'nullable|image|max:10240', // max 10MB
             'name'           => 'sometimes|required|string|max:255',
             'category_id'    => 'sometimes|required|exists:categories,id',
             'subcategory_id' => 'nullable|exists:categories,id',
