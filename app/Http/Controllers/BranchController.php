@@ -18,7 +18,7 @@ class BranchController extends Controller
         $validated = $request->validate([
             'name'     => 'required|string|max:255',
             'address'  => 'nullable|string',
-            'city'     => 'nullable|string',
+            'phone'     => 'nullable|string',
             'manager_name' => 'nullable|string',
             'status'   => 'required|in:active,inactive',
         ]);
@@ -48,7 +48,7 @@ class BranchController extends Controller
         $validated = $request->validate([
             'name'     => 'required|string|max:255',
             'address'  => 'nullable|string',
-            'city'     => 'nullable|string',
+            'phone'     => 'nullable|string',
             'manager_name' => 'nullable|string',
             'status'   => 'required|in:active,inactive',
         ]);
