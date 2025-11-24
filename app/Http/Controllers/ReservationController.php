@@ -9,6 +9,7 @@ use App\Models\Cloth;
 use App\Models\ReservationService;
 use App\Models\AuditLog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ReservationController extends Controller
 {
@@ -54,7 +55,8 @@ class ReservationController extends Controller
             'category'        => 'required|string',
             'paid_amount'     => 'nullable|numeric',
             'total_amount'    => 'required|numeric',
-            'payment_status'  => 'required|in:pending,paid',
+            'payment_method'  => 'nullable|in:efectivo,transferencia,tarjeta',
+            'bank_code'       => 'nullable|string',
             'services'        => 'required|array|min:1',
             'services.*.service_id'   => 'required|integer',
             'services.*.service_type' => 'required|in:clothing,package',
@@ -67,8 +69,12 @@ class ReservationController extends Controller
             'category'       => $validated['category'],
             'paid_amount'    => $validated['paid_amount'] ?? 0,
             'total_amount'   => $validated['total_amount'],
-            'payment_status' => $validated['payment_status'],
+            'payment_method' => $validated['payment_method'] ?? null,
+            'bank_code'      => $validated['bank_code'] ?? null,
         ]);
+
+        // Calcular payment_status automáticamente
+        $reservation->updatePaymentStatus();
 
         foreach ($validated['services'] as $service) {
             ReservationService::create([
@@ -112,10 +118,16 @@ class ReservationController extends Controller
             'category'        => 'sometimes|string',
             'paid_amount'     => 'sometimes|numeric',
             'total_amount'    => 'sometimes|numeric',
-            'payment_status'  => 'sometimes|in:pending,paid',
+            'payment_method'  => 'sometimes|in:efectivo,transferencia,tarjeta',
+            'bank_code'       => 'sometimes|string',
         ]);
 
         $reservation->update($validated);
+
+        // Recalcular payment_status si cambió paid_amount o total_amount
+        if (isset($validated['paid_amount']) || isset($validated['total_amount'])) {
+            $reservation->updatePaymentStatus();
+        }
 
         $changed = [];
         foreach ($validated as $key => $value) {
@@ -194,5 +206,53 @@ class ReservationController extends Controller
         });
 
         return response()->json($events);
+    }
+
+    /**
+     * Upload transfer screenshot for a reservation.
+     */
+    public function uploadTransferScreenshot(Request $request, $id)
+    {
+        $reservation = Reservation::findOrFail($id);
+
+        $validated = $request->validate([
+            'transfer_screenshot' => 'required|image|max:10240', // Max 10MB
+        ]);
+
+        // Eliminar captura anterior si existe
+        if ($reservation->transfer_screenshot && Storage::disk('public')->exists($reservation->transfer_screenshot)) {
+            Storage::disk('public')->delete($reservation->transfer_screenshot);
+        }
+
+        // Guardar nueva captura
+        $path = $request->file('transfer_screenshot')->store('transfers', 'public');
+        $reservation->transfer_screenshot = $path;
+        $reservation->save();
+
+        // Audit log
+        AuditLog::create([
+            'user_id'  => $request->user()->id ?? null,
+            'action'   => 'upload_transfer_screenshot',
+            'model'    => Reservation::class,
+            'model_id' => $reservation->id,
+            'changes'  => json_encode(['screenshot' => $path]),
+        ]);
+
+        return response()->json([
+            'message' => 'Captura de transferencia subida exitosamente',
+            'reservation' => $reservation,
+        ]);
+    }
+
+    /**
+     * Search reservations by bank code.
+     */
+    public function searchByBankCode($code)
+    {
+        $reservations = Reservation::with(['client', 'serviceable', 'reservationServices'])
+            ->where('bank_code', $code)
+            ->get();
+
+        return response()->json($reservations);
     }
 }

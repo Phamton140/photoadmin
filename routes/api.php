@@ -185,9 +185,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::middleware(['permission:reservations.manage'])->group(function () {
         Route::get('/reservations', [ReservationController::class, 'index']);
         Route::get('/reservations/calendar', [ReservationController::class, 'calendar']);
+        Route::get('/reservations/search/bank-code/{code}', [ReservationController::class, 'searchByBankCode']);
         Route::post('/reservations', [ReservationController::class, 'store']);
         Route::get('/reservations/{id}', [ReservationController::class, 'show']);
         Route::put('/reservations/{id}', [ReservationController::class, 'update']);
+        Route::post('/reservations/{id}/transfer-screenshot', [ReservationController::class, 'uploadTransferScreenshot']);
         Route::delete('/reservations/{id}', [ReservationController::class, 'destroy']);
     });
 });

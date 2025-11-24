@@ -18,7 +18,35 @@ class Reservation extends Model
         'category',
         'paid_amount',
         'payment_status',
+        'payment_method',
+        'bank_code',
+        'transfer_screenshot',
     ];
+
+    protected $appends = ['transfer_screenshot_url'];
+
+    /**
+     * Get the full URL for the transfer screenshot.
+     */
+    public function getTransferScreenshotUrlAttribute()
+    {
+        return $this->transfer_screenshot ? url('storage/' . $this->transfer_screenshot) : null;
+    }
+
+    /**
+     * Calcular automáticamente el payment_status basado en paid_amount.
+     */
+    public function updatePaymentStatus(): void
+    {
+        if ($this->paid_amount >= $this->total_amount) {
+            $this->payment_status = 'paid';
+        } elseif ($this->paid_amount > 0) {
+            $this->payment_status = 'partial';
+        } else {
+            $this->payment_status = 'pending';
+        }
+        $this->save();
+    }
 
     /**
      * Client that made the reservation.
