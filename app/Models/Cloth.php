@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Cloth extends Model
 {
+    protected $table = 'clothes';
+
     protected $fillable = [
         'image',
         'name',
@@ -27,7 +29,7 @@ class Cloth extends Model
     }
 
     /**
-     * Sub‑category relationship (optional).
+     * Sub-category relationship (optional).
      */
     public function subcategory(): BelongsTo
     {

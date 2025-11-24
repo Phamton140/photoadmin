@@ -27,7 +27,7 @@ class Package extends Model
     }
 
     /**
-     * Sub‑category relationship (optional).
+     * Sub-category relationship (optional).
      */
     public function subcategory(): BelongsTo
     {
