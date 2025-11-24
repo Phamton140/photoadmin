@@ -25,6 +25,9 @@ class ClothController extends Controller
      */
     public function store(Request $request)
     {
+        \Illuminate\Support\Facades\Log::info('Cloth store request data:', $request->all());
+        \Illuminate\Support\Facades\Log::info('Has file image?', ['has_file' => $request->hasFile('image')]);
+
         $validated = $request->validate([
             'image'          => 'nullable|image|max:10240', // max 10MB for high quality
             'name'           => 'required|string|max:255',
@@ -39,6 +42,9 @@ class ClothController extends Controller
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('clothes', 'public');
             $validated['image'] = $path;
+            \Illuminate\Support\Facades\Log::info('Image stored at:', ['path' => $path]);
+        } else {
+            \Illuminate\Support\Facades\Log::warning('No image file detected in request.');
         }
 
         $cloth = Cloth::create($validated);
