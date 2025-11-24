@@ -6,6 +6,7 @@ use App\Models\Cloth;
 use App\Models\Category;
 use App\Models\Branch;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ClothController extends Controller
 {
@@ -25,7 +26,7 @@ class ClothController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'image'          => 'nullable|image|max:2048', // optional image upload
+            'image'          => 'nullable|image|max:2048',
             'name'           => 'required|string|max:255',
             'category_id'    => 'required|exists:categories,id',
             'subcategory_id' => 'nullable|exists:categories,id',
@@ -34,7 +35,7 @@ class ClothController extends Controller
             'status'         => 'required|in:reserved,available,laundry,broken,in_session',
         ]);
 
-        // Si se envía una imagen, guardarla en storage/app/public/clothes
+        // Save image to storage/app/public/clothes
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('clothes', 'public');
             $validated['image'] = $path;
@@ -69,7 +70,14 @@ class ClothController extends Controller
             'status'         => 'sometimes|required|in:reserved,available,laundry,broken,in_session',
         ]);
 
+        // If new image is uploaded, delete old one and save new one
         if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($cloth->image && Storage::disk('public')->exists($cloth->image)) {
+                Storage::disk('public')->delete($cloth->image);
+            }
+
+            // Save new image
             $path = $request->file('image')->store('clothes', 'public');
             $validated['image'] = $path;
         }
@@ -84,6 +92,12 @@ class ClothController extends Controller
     public function destroy($id)
     {
         $cloth = Cloth::findOrFail($id);
+
+        // Delete associated image if exists
+        if ($cloth->image && Storage::disk('public')->exists($cloth->image)) {
+            Storage::disk('public')->delete($cloth->image);
+        }
+
         $cloth->delete();
         return response()->json(null, 204);
     }
