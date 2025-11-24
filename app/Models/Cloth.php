@@ -20,6 +20,16 @@ class Cloth extends Model
         'status',
     ];
 
+    protected $appends = ['image_url'];
+
+    /**
+     * Get the full URL for the image.
+     */
+    public function getImageUrlAttribute()
+    {
+        return $this->image ? url('storage/' . $this->image) : null;
+    }
+
     /**
      * Category relationship.
      */
