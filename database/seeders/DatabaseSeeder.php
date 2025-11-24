@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         // Ejecutar seeders principales
         $this->call([
             PermissionSeeder::class,
+            RolePermissionSeeder::class,
             SuperAdminSeeder::class,
         ]);
     }
