@@ -27,6 +27,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ClothController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\CategoryController;
 
 // -------------------------------------------------------
 // RUTAS PÚBLICAS
@@ -158,6 +159,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/reports/summary', [ReportController::class, 'summary']);
         Route::get('/reports/projects-by-branch', [ReportController::class, 'projectsByBranch']);
         Route::get('/reports/productivity', [ReportController::class, 'productivity']);
+    });
+
+    // 📂 CATEGORÍAS (Categories)
+    Route::middleware(['permission:categories.manage'])->group(function () {
+        Route::get('/categories', [CategoryController::class, 'index']);
+        Route::get('/categories/all', [CategoryController::class, 'all']);
+        Route::post('/categories', [CategoryController::class, 'store']);
+        Route::get('/categories/{id}', [CategoryController::class, 'show']);
+        Route::get('/categories/{id}/subcategories', [CategoryController::class, 'subcategories']);
+        Route::put('/categories/{id}', [CategoryController::class, 'update']);
+        Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
     });
 
     // 📦 PAQUETES (Packages)

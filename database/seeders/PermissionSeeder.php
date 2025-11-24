@@ -36,6 +36,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'Ver reportes', 'key' => 'reports.view', 'module' => 'reports'],
 
             // Services (Paquetes y Vestimentas)
+            ['name' => 'Gestionar categorías', 'key' => 'categories.manage', 'module' => 'categories'],
             ['name' => 'Gestionar paquetes', 'key' => 'packages.manage', 'module' => 'packages'],
             ['name' => 'Gestionar vestimentas', 'key' => 'clothes.manage', 'module' => 'clothes'],
             // Reservas
