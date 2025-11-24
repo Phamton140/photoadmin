@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');                 // Nombre de la sucursal
             $table->string('address')->nullable();  // Dirección física
-            $table->string('city')->nullable();     // Ciudad
+            $table->string('phone')->nullable();     // Teléfono
             $table->string('manager_name')->nullable(); // Gerente encargado
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();

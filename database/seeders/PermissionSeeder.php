@@ -35,8 +35,11 @@ class PermissionSeeder extends Seeder
             // Reports (Reportes)
             ['name' => 'Ver reportes', 'key' => 'reports.view', 'module' => 'reports'],
 
-            // Roles & Permissions management
-            ['name' => 'Gestionar roles y permisos', 'key' => 'roles.manage', 'module' => 'roles'],
+            // Services (Paquetes y Vestimentas)
+            ['name' => 'Gestionar paquetes', 'key' => 'packages.manage', 'module' => 'packages'],
+            ['name' => 'Gestionar vestimentas', 'key' => 'clothes.manage', 'module' => 'clothes'],
+            // Reservas
+            ['name' => 'Gestionar reservas', 'key' => 'reservations.manage', 'module' => 'reservations'],
         ];
 
         foreach ($permissions as $perm) {

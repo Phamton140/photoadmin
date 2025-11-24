@@ -23,6 +23,11 @@ use App\Http\Controllers\ProductionTaskController;
 use App\Http\Controllers\ProjectFileController;
 use App\Http\Controllers\ReportController;
 
+// Services module
+use App\Http\Controllers\PackageController;
+use App\Http\Controllers\ClothController;
+use App\Http\Controllers\ReservationController;
+
 // -------------------------------------------------------
 // RUTAS PÚBLICAS
 // -------------------------------------------------------
@@ -153,5 +158,33 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/reports/summary', [ReportController::class, 'summary']);
         Route::get('/reports/projects-by-branch', [ReportController::class, 'projectsByBranch']);
         Route::get('/reports/productivity', [ReportController::class, 'productivity']);
+    });
+
+    // 📦 PAQUETES (Packages)
+    Route::middleware(['permission:packages.manage'])->group(function () {
+        Route::get('/packages', [PackageController::class, 'index']);
+        Route::post('/packages', [PackageController::class, 'store']);
+        Route::get('/packages/{id}', [PackageController::class, 'show']);
+        Route::put('/packages/{id}', [PackageController::class, 'update']);
+        Route::delete('/packages/{id}', [PackageController::class, 'destroy']);
+    });
+
+    // 👗 VESTIMENTAS (Clothes)
+    Route::middleware(['permission:clothes.manage'])->group(function () {
+        Route::get('/clothes', [ClothController::class, 'index']);
+        Route::post('/clothes', [ClothController::class, 'store']);
+        Route::get('/clothes/{id}', [ClothController::class, 'show']);
+        Route::put('/clothes/{id}', [ClothController::class, 'update']);
+        Route::delete('/clothes/{id}', [ClothController::class, 'destroy']);
+    });
+
+    // 📅 RESERVAS (Reservations)
+    Route::middleware(['permission:reservations.manage'])->group(function () {
+        Route::get('/reservations', [ReservationController::class, 'index']);
+        Route::get('/reservations/calendar', [ReservationController::class, 'calendar']);
+        Route::post('/reservations', [ReservationController::class, 'store']);
+        Route::get('/reservations/{id}', [ReservationController::class, 'show']);
+        Route::put('/reservations/{id}', [ReservationController::class, 'update']);
+        Route::delete('/reservations/{id}', [ReservationController::class, 'destroy']);
     });
 });
