@@ -35,32 +35,42 @@ class RolePermissionSeeder extends Seeder
 
         // ADMIN
         $admin->permissions()->sync(
-            Permission::whereIn('name', [
-                'users.manage', 'users.create', 'users.update', 'users.delete',
-                'roles.manage', 'roles.create', 'roles.update', 'roles.delete',
-                'permissions.manage',
-                'audit.view',
-                'branches.view', 'branches.manage',
-                'clients.view', 'clients.manage',
-                'projects.view', 'projects.manage',
-                'production.view', 'production.manage',
+            Permission::whereIn('key', [
+                'branches.view',
+                'branches.manage',
+                'clients.view',
+                'clients.manage',
+                'projects.view',
+                'projects.manage',
+                'production.view',
+                'production.manage',
                 'files.upload',
-                'reports.view'
+                'reports.view',
+                'categories.manage',
+                'packages.manage',
+                'clothes.manage',
+                'reservations.manage'
             ])->pluck('id')->toArray()
         );
 
         // EDITOR
         $editor->permissions()->sync(
-            Permission::whereIn('name', [
-                'projects.view', 'projects.manage',
-                'production.view', 'production.manage',
-                'files.upload'
+            Permission::whereIn('key', [
+                'projects.view',
+                'projects.manage',
+                'production.view',
+                'production.manage',
+                'files.upload',
+                'categories.manage',
+                'packages.manage',
+                'clothes.manage',
+                'reservations.manage'
             ])->pluck('id')->toArray()
         );
 
         // VIEWER
         $viewer->permissions()->sync(
-            Permission::whereIn('name', [
+            Permission::whereIn('key', [
                 'projects.view',
                 'branches.view',
                 'clients.view',
