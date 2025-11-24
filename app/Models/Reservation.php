@@ -1,10 +1,12 @@
 <?php
+<?php
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Reservation extends Model
 {
@@ -14,6 +16,9 @@ class Reservation extends Model
         'serviceable_type',
         'date',
         'total_amount',
+        'category',
+        'paid_amount',
+        'payment_status',
     ];
 
     /**
@@ -30,5 +35,13 @@ class Reservation extends Model
     public function serviceable(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    /**
+     * Services attached to this reservation (clothing or package).
+     */
+    public function reservationServices(): HasMany
+    {
+        return $this->hasMany(ReservationService::class);
     }
 }
